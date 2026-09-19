@@ -235,4 +235,6 @@ Keep-Alive: timeout=5
 3. https://github.com/bquiroao/segundo-parcial-boris-quiroa-agenda-citas/pull/3
 4. https://github.com/bquiroao/segundo-parcial-boris-quiroa-agenda-citas/pull/4
 
-![vista mes](evidencia/08-historial.png)
+
+## 7. Historial de Pull Requests en GitHub
+![Pull Requests mergeados](evidencia/08-historial.png)
