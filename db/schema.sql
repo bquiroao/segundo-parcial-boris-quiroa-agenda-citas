@@ -1,5 +1,6 @@
 -- Esquema del módulo de citas del Sistema Hospitalario Integrado
 -- Cubre RQF-01, RQF-03, RQF-05, RQF-10
+SET NAMES utf8mb4;
 
 CREATE TABLE IF NOT EXISTS doctores (
     id INT AUTO_INCREMENT PRIMARY KEY,

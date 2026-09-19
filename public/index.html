@@ -3,25 +3,43 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sistema Hospitalario — Citas</title>
+<title>Hospital Integrado Boris Quiroa — Citas Médicas</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" />
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header class="topbar">
-    <h1>Módulo de Citas</h1>
+    <div class="marca">
+      <span class="marca-icono">🏥</span>
+      <div>
+        <h1>Hospital Integrado Boris Quiroa</h1>
+        <p class="subtitulo">Agenda de citas médicas</p>
+      </div>
+    </div>
     <div class="filtros">
-      <label>Doctor:
+      <label>Filtrar por doctor
         <select id="filtroDoctor">
-          <option value="">Todos</option>
+          <option value="">Todos los doctores</option>
         </select>
       </label>
+      <button type="button" id="btnNuevaCita" class="btn-primario">＋ Nueva cita</button>
     </div>
   </header>
 
   <main>
+    <div class="leyenda">
+      <span class="leyenda-item"><i class="punto estado-pendiente"></i> Pendiente</span>
+      <span class="leyenda-item"><i class="punto estado-confirmada"></i> Confirmada</span>
+      <span class="leyenda-item"><i class="punto estado-cancelada"></i> Cancelada</span>
+      <span class="leyenda-item"><i class="punto estado-atendida"></i> Atendida</span>
+    </div>
     <div id="calendario"></div>
   </main>
+
+  <footer class="pie-pagina">
+    Sistema Hospitalario Integrado · Módulo de Citas · Desarrollado por
+    <strong>Boris Alexander Quiroa Orellana</strong> — Análisis de Sistemas II
+  </footer>
 
   <!-- Modal: crear/detalle de cita -->
   <div id="modalCita" class="modal oculto">
@@ -35,33 +53,34 @@
         <label>Doctor
           <select id="doctorId" required></select>
         </label>
-        <label>Inicio
+        <label>Fecha y hora de inicio
           <input type="datetime-local" id="inicio" required />
         </label>
-        <label>Fin
+        <label>Fecha y hora de fin
           <input type="datetime-local" id="fin" required />
         </label>
-        <label>Motivo
-          <input type="text" id="motivo" required maxlength="255" />
+        <label>Motivo de la consulta
+          <input type="text" id="motivo" required maxlength="255" placeholder="Ej. Control general" />
         </label>
         <div id="detalleEstado" class="detalle-estado oculto">
-          <p>Estado actual: <strong id="estadoActual"></strong></p>
+          <p>Estado actual: <span id="estadoActual" class="badge-estado"></span></p>
           <div class="acciones-estado">
-            <button type="button" data-estado="confirmada">Confirmar</button>
-            <button type="button" data-estado="atendida">Marcar atendida</button>
-            <button type="button" data-estado="cancelada" class="peligro">Cancelar cita</button>
+            <button type="button" data-estado="confirmada" class="btn-accion btn-confirmar">✔ Confirmar</button>
+            <button type="button" data-estado="atendida" class="btn-accion btn-atender">🩺 Marcar atendida</button>
+            <button type="button" data-estado="cancelada" class="btn-accion btn-cancelar">✕ Cancelar cita</button>
           </div>
         </div>
         <p id="formError" class="error oculto"></p>
         <div class="modal-acciones">
-          <button type="submit" id="btnGuardar">Guardar</button>
-          <button type="button" id="btnCerrarModal">Cerrar</button>
+          <button type="submit" id="btnGuardar" class="btn-primario">💾 Guardar</button>
+          <button type="button" id="btnCerrarModal" class="btn-secundario">Cerrar</button>
         </div>
       </form>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales/es.global.min.js"></script>
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
 </body>

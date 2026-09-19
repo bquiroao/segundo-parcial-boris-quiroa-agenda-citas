@@ -64,13 +64,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('btnCerrarModal').addEventListener('click', cerrarModal);
 
+    // Botón "＋ Nueva cita" del encabezado: abre el modal en blanco,
+    // sugiriendo la próxima hora en punto como horario de inicio.
+    document.getElementById('btnNuevaCita').addEventListener('click', () => {
+        limpiarFormulario();
+        const ahora = new Date();
+        ahora.setMinutes(0, 0, 0);
+        ahora.setHours(ahora.getHours() + 1);
+        const inicio = ahora.toISOString().slice(0, 16);
+        const finDate = new Date(ahora.getTime() + 30 * 60 * 1000);
+        const fin = finDate.toISOString().slice(0, 16);
+        document.getElementById('inicio').value = inicio;
+        document.getElementById('fin').value = fin;
+        abrirModal();
+    });
+
     const calendarEl = document.getElementById('calendario');
     const calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'es',
+        firstDay: 1,
         initialView: 'dayGridMonth',
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek',
+        },
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
         },
         height: 'auto',
         editable: true, // habilita drag & drop (RQF-04)
@@ -123,6 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('motivo').value = cita.motivo;
             detalleEstado.classList.remove('oculto');
             estadoActualEl.textContent = cita.estado;
+            estadoActualEl.className = `badge-estado estado-${cita.estado}`;
             abrirModal();
         },
         // RQF-04: reprogramar con drag & drop, sincronizando con la API.

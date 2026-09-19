@@ -1,4 +1,5 @@
 -- Datos semilla mínimos para pruebas del módulo de citas
+SET NAMES utf8mb4;
 
 INSERT INTO doctores (nombre, especialidad, email) VALUES
     ('Dra. Ana López', 'Medicina General', 'ana.lopez@hospital.test'),

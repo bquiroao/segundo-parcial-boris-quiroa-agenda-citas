@@ -70,10 +70,10 @@ docker compose up -d
 docker ps
 ```
 
-Salida esperada de `docker ps` (pega aquí la real):
+Salida esperada de `docker ps` :
 
 ```
-<< PEGA AQUÍ LA SALIDA REAL DE: docker ps >>
+Container hospital_mysql               Started        3.3s
 CONTAINER ID   IMAGE        COMMAND                  STATUS                   PORTS                    NAMES
 xxxxxxxxxxxx   mysql:8.0    "docker-entrypoint.s…"   Up X seconds (healthy)   0.0.0.0:3306->3306/tcp   hospital_mysql
 ```
@@ -99,7 +99,17 @@ curl -i -X POST http://localhost:3000/api/citas \
   -H "Content-Type: application/json" \
   -d '{"paciente_id":1,"doctor_id":1,"inicio":"2026-10-01 09:00","fin":"2026-10-01 09:30","motivo":"Consulta de control"}'
 ```
-`<< PEGA AQUÍ LA RESPUESTA REAL: HTTP/1.1 201 Created + JSON de la cita >>`
+`HTTP/1.1 201 Created
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 222
+ETag: W/"de-de/B4WrOds06n0pOmuPFhUMj5t8"
+Date: Sat, 19 Sep 2026 13:41:58 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":4,"paciente_id":1,"doctor_id":1,"inicio":"2026-10-01 09:00:00","fin":"2026-10-01 09:30:00","motivo":"Consulta de control","estado":"pendiente","creado_en":"2026-09-19 13:41:58","actualizado_en":"2026-09-19 13:41:58"}`
 
 ### 4.2 Doble reserva (RQF-03, RQNF-07) → 409
 
@@ -108,7 +118,17 @@ curl -i -X POST http://localhost:3000/api/citas \
   -H "Content-Type: application/json" \
   -d '{"paciente_id":2,"doctor_id":1,"inicio":"2026-10-01 09:15","fin":"2026-10-01 09:45","motivo":"Otra consulta"}'
 ```
-`<< PEGA AQUÍ: HTTP/1.1 409 Conflict + {"error":"El doctor ya tiene una cita..."} >>`
+`HTTP/1.1 409 Conflict
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 97
+ETag: W/"61-3JD23apfBoqZVZYfM9iPoMn1c/w"
+Date: Sat, 19 Sep 2026 13:42:43 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"error":"El doctor ya tiene una cita activa que se solapa con el horario solicitado (cita #4)."}`
 
 ### 4.3 Cambiar estado (RQF-05, RQF-10) → 200
 
@@ -121,14 +141,34 @@ curl -i -X PATCH http://localhost:3000/api/citas/1/estado \
   -H "Content-Type: application/json" \
   -d '{"estado":"cancelada"}'
 ```
-`<< PEGA AQUÍ ambas respuestas 200 con estado actualizado >>`
+`HTTP/1.1 200 OK
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 223
+ETag: W/"df-du3eIUW8qucMYsPZwEYuVpUVOKg"
+Date: Sat, 19 Sep 2026 13:42:54 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":4,"paciente_id":1,"doctor_id":1,"inicio":"2026-10-01 09:00:00","fin":"2026-10-01 09:30:00","motivo":"Consulta de control","estado":"confirmada","creado_en":"2026-09-19 13:41:58","actualizado_en":"2026-09-19 13:42:54"}`
 
 ### 4.4 Listar con filtros (RQF-06) → 200
 
 ```bash
 curl -i "http://localhost:3000/api/citas?doctor_id=1&desde=2026-10-01&hasta=2026-10-31"
 ```
-`<< PEGA AQUÍ: HTTP/1.1 200 OK + arreglo JSON >>`
+`HTTP/1.1 200 OK
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 222
+ETag: W/"de-TzYIHQ2imnRm8nz7/QSPBccMFdA"
+Date: Sat, 19 Sep 2026 13:43:09 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":4,"paciente_id":1,"doctor_id":1,"inicio":"2026-10-01 09:00:00","fin":"2026-10-01 09:30:00","motivo":"Consulta de control","estado":"cancelada","creado_en":"2026-09-19 13:41:58","actualizado_en":"2026-09-19 13:43:09"}`
 
 ### 4.5 Validación de datos (RQF-08) → 400
 
@@ -137,24 +177,57 @@ curl -i -X POST http://localhost:3000/api/citas \
   -H "Content-Type: application/json" \
   -d '{"paciente_id":1}'
 ```
-`<< PEGA AQUÍ: HTTP/1.1 400 Bad Request + mensaje de campos obligatorios >>`
+`HTTP/1.1 200 OK
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 224
+ETag: W/"e0-hoPWpJS6gftCmVzHsho5FtwvOHE"
+Date: Sat, 19 Sep 2026 13:43:26 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"id":4,"paciente_id":1,"doctor_id":1,"inicio":"2026-10-01 09:00:00","fin":"2026-10-01 09:30:00","motivo":"Consulta de control","estado":"cancelada","creado_en":"2026-09-19 13:41:58","actualizado_en":"2026-09-19 13:43:09"}]`
 
 ### 4.6 Cita inexistente (RQNF-03) → 404
 
 ```bash
 curl -i http://localhost:3000/api/citas/9999
 ```
-`<< PEGA AQUÍ: HTTP/1.1 404 Not Found >>`
+`HTTP/1.1 404 Not Found
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 42
+ETag: W/"2a-9jfJ/ZsnXylj7jmNMQ2RvbQS/ig"
+Date: Sat, 19 Sep 2026 13:43:56 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"error":"No existe la cita con id 9999."}`
 
 ## 5. Capturas de pantalla a incluir
 
 1. Calendario en vista **mes**, con al menos 3 citas de colores distintos (RQF-02, RQF-10).
+![vista mes](evidencia/01-vista-mes.png)
+
 2. Calendario en vista **semana**.
+![vista mes](evidencia/02-vista-semana.png)
+
 3. Modal de **creación** de cita (formulario con paciente/doctor/fecha/motivo).
+![vista mes](evidencia/03-crear-cita.png)
+
 4. Modal de **detalle** al hacer clic sobre un evento (RQF-09), con botones de cambio de estado.
+![vista mes](evidencia/04-detalle-cita.png)
+
 5. Antes/después de **arrastrar** una cita a otro horario (drag & drop, RQF-04).
+![vista mes](evidencia/05-despues-drag.png)
+
 6. Vista del calendario en **resolución tablet** (~768px, RQNF-06).
+![vista mes](evidencia/06-vista-tablet.png)
+
 7. `docker ps` mostrando el contenedor `hospital_mysql` corriendo (RQNF-01).
+![vista mes](evidencia/07-docker.png)
 
 ## 6. Plantilla de descripción de Pull Request (usar en los 4 PRs de GitHub)
 
