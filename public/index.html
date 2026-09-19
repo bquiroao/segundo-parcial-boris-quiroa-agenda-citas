@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sistema Hospitalario — Citas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Módulo de Citas</h1>
+    <div class="filtros">
+      <label>Doctor:
+        <select id="filtroDoctor">
+          <option value="">Todos</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <div id="calendario"></div>
+  </main>
+
+  <!-- Modal: crear/detalle de cita -->
+  <div id="modalCita" class="modal oculto">
+    <div class="modal-contenido">
+      <h2 id="modalTitulo">Nueva cita</h2>
+      <form id="formCita">
+        <input type="hidden" id="citaId" />
+        <label>Paciente
+          <select id="pacienteId" required></select>
+        </label>
+        <label>Doctor
+          <select id="doctorId" required></select>
+        </label>
+        <label>Inicio
+          <input type="datetime-local" id="inicio" required />
+        </label>
+        <label>Fin
+          <input type="datetime-local" id="fin" required />
+        </label>
+        <label>Motivo
+          <input type="text" id="motivo" required maxlength="255" />
+        </label>
+        <div id="detalleEstado" class="detalle-estado oculto">
+          <p>Estado actual: <strong id="estadoActual"></strong></p>
+          <div class="acciones-estado">
+            <button type="button" data-estado="confirmada">Confirmar</button>
+            <button type="button" data-estado="atendida">Marcar atendida</button>
+            <button type="button" data-estado="cancelada" class="peligro">Cancelar cita</button>
+          </div>
+        </div>
+        <p id="formError" class="error oculto"></p>
+        <div class="modal-acciones">
+          <button type="submit" id="btnGuardar">Guardar</button>
+          <button type="button" id="btnCerrarModal">Cerrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
