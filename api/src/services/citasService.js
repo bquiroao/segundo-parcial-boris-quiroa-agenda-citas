@@ -61,8 +61,25 @@ async function crearCita(datos) {
     return citasRepository.crear(datos);
 }
 
+const ESTADOS = ['pendiente', 'confirmada', 'cancelada', 'atendida'];
+
+// Máquina de estados de la cita (RQF-10 / RQNF-04): define qué transiciones
+// son válidas para evitar, por ejemplo, "revivir" una cita cancelada o
+// modificar una cita ya atendida.
+const TRANSICIONES_PERMITIDAS = {
+    pendiente: ['confirmada', 'cancelada'],
+    confirmada: ['cancelada', 'atendida'],
+    cancelada: [],
+    atendida: [],
+};
+
+const ESTADOS_NO_REPROGRAMABLES = ['cancelada', 'atendida'];
+
 async function reprogramarCita(id, { inicio, fin }) {
     const cita = await obtenerCita(id);
+    if (ESTADOS_NO_REPROGRAMABLES.includes(cita.estado)) {
+        throw new ValidationError(`No se puede reprogramar una cita en estado '${cita.estado}'.`);
+    }
     if (!inicio || !fin) {
         throw new ValidationError('inicio y fin son obligatorios para reprogramar.');
     }
@@ -77,10 +94,15 @@ async function reprogramarCita(id, { inicio, fin }) {
 }
 
 async function cambiarEstadoCita(id, nuevoEstado) {
-    await obtenerCita(id);
-    const estadosValidos = ['pendiente', 'confirmada', 'cancelada', 'atendida'];
-    if (!estadosValidos.includes(nuevoEstado)) {
+    const cita = await obtenerCita(id);
+    if (!ESTADOS.includes(nuevoEstado)) {
         throw new ValidationError(`Estado inválido: ${nuevoEstado}.`);
+    }
+    const permitidos = TRANSICIONES_PERMITIDAS[cita.estado] || [];
+    if (!permitidos.includes(nuevoEstado)) {
+        throw new ValidationError(
+            `Transición de estado no permitida: '${cita.estado}' -> '${nuevoEstado}'.`
+        );
     }
     return citasRepository.actualizarEstado(id, nuevoEstado);
 }
