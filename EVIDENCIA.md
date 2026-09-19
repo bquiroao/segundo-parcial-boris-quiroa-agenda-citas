@@ -229,20 +229,10 @@ Keep-Alive: timeout=5
 7. `docker ps` mostrando el contenedor `hospital_mysql` corriendo (RQNF-01).
 ![vista mes](evidencia/07-docker.png)
 
-## 6. Plantilla de descripción de Pull Request (usar en los 4 PRs de GitHub)
+## 6. Pull Requests (mergeados)
+1. https://github.com/bquiroao/segundo-parcial-boris-quiroa-agenda-citas/pull/1
+2. https://github.com/bquiroao/segundo-parcial-boris-quiroa-agenda-citas/pull/2
+3. https://github.com/bquiroao/segundo-parcial-boris-quiroa-agenda-citas/pull/3
+4. https://github.com/bquiroao/segundo-parcial-boris-quiroa-agenda-citas/pull/4
 
-```markdown
-## Resumen
-<qué hace esta rama>
-
-## RQF/RQNF cubiertos
-- RQF-xx: ...
-- RQNF-xx: ...
-
-## Evidencia
-- Comandos ejecutados y su salida (curl / docker ps)
-- Capturas de pantalla si aplica
-
-## Cómo probar
-1. ...
-```
+![vista mes](evidencia/08-historial.png)
